@@ -1,30 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/06 16:31:19 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/07 01:46:40 by gribeiro         ###   ########.fr       */
+/*   Created: 2025/05/07 01:43:23 by gribeiro          #+#    #+#             */
+/*   Updated: 2025/05/07 01:44:42 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	main(int argc, char **argv)
+long	ft_get_time(void)
 {
-	t_ph	ph;
-	int		i;
-
-	if (argc < 5 || argc > 6)
-		return (write(2, "Invalid Argument(s).\n", 21), 1);
-	if (!init_phil(&ph, argv))
-		return (1);
-	if (!create_philos(&ph))
-		return (1);
-	i = 0;
-	while (i < ph.ph_cnt)
-		pthread_join(ph.philo[i++].thread, NULL);
-	return (free_mem (&ph, FREE_PHILO | FREE_FORKS, 0));
+	struct timeval	tv;
+	gettimeofday(&tv, NULL);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }

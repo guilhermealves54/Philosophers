@@ -13,7 +13,7 @@
 NAME = philosophers
 
 # Srcs
-SRCS = main.c init.c
+SRCS = main.c init.c crt_philos.c freemem.c utils.c
 
 SRC = $(addprefix src/, $(SRCS))
 

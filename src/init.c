@@ -6,47 +6,48 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:30:20 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/06 21:38:39 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/07 01:55:49 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static int	valid_args(t_phil *phil);
+static int	valid_args(t_ph *ph);
 static int	ft_atoi(const char *str);
 
-int	init_phil(t_phil *phil, char **argv)
+int	init_phil(t_ph *ph, char **argv)
 {
-	phil->phil = ft_atoi(argv[1]);
-	phil->forks = phil->phil;
-	phil->t_die = ft_atoi(argv[2]);
-	phil->t_eat = ft_atoi(argv[3]);
-	phil->t_sleep = ft_atoi(argv[4]);
+	ph->ph_cnt = ft_atoi(argv[1]);
+	ph->frk_cnt = ph->ph_cnt;
+	ph->t_die = ft_atoi(argv[2]);
+	ph->t_eat = ft_atoi(argv[3]);
+	ph->t_sleep = ft_atoi(argv[4]);
+	ph->philo_died = 0;
 	if (argv[5])
-		phil->must_eat = ft_atoi(argv[5]);
+		ph->must_eat = ft_atoi(argv[5]);
 	else
-		phil->must_eat = -1;
-	if (!valid_args(phil))
+		ph->must_eat = -1;
+	if (!valid_args(ph))
 		return (0);
 	return (1);
 }
 
-static int	valid_args(t_phil *phil)
+static int	valid_args(t_ph *ph)
 {
-	if (phil->phil == -2 || phil->t_die == -2 || phil->t_eat == -2
-		|| phil->t_sleep == -2)
+	if (ph->ph_cnt == -2 || ph->t_die == -2 || ph->t_eat == -2
+		|| ph->t_sleep == -2)
 		return (write(2, "Invalid Argument(s).\n", 21), 0);
-	if (phil->phil == -3 || phil->t_die == -3 || phil->t_eat == -3
-		|| phil->t_sleep == -3 || phil->must_eat == -3)
+	if (ph->ph_cnt == -3 || ph->t_die == -3 || ph->t_eat == -3
+		|| ph->t_sleep == -3 || ph->must_eat == -3)
 		return (write(2, "Arguments must be positive.\n", 28), 0);
-	if (phil->phil == -4 || phil->t_die == -4 || phil->t_eat == -4
-		|| phil->t_sleep == -4 || phil->must_eat == -4)
+	if (ph->ph_cnt == -4 || ph->t_die == -4 || ph->t_eat == -4
+		|| ph->t_sleep == -4 || ph->must_eat == -4)
 		return (write(2, "Arguments must be integers.\n", 28), 0);
-	if (phil->phil < 1)
+	if (ph->ph_cnt < 1)
 		return (write(2, "Need at least one philosopher.\n", 31), 0);
-	if (phil->t_die == 0 || phil->t_eat == 0 || phil->t_sleep == 0)
+	if (ph->t_die == 0 || ph->t_eat == 0 || ph->t_sleep == 0)
 		return (write(2, "0 milliseconds is invalid.\n", 27), 0);
-	if (phil->must_eat == 0)
+	if (ph->must_eat == 0)
 		return (write(2, "If \"number of times each philosopher must eat\" "
 				"is specified, it needs to be more then 0.\n", 89), 0);
 	return (1);

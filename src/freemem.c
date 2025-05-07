@@ -1,30 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   freemem.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/06 16:31:19 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/07 01:46:40 by gribeiro         ###   ########.fr       */
+/*   Created: 2025/05/07 01:46:52 by gribeiro          #+#    #+#             */
+/*   Updated: 2025/05/07 01:49:53 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	main(int argc, char **argv)
+int	free_mem(t_ph *ph, int opt, int exit)
 {
-	t_ph	ph;
-	int		i;
+	int	i;
 
-	if (argc < 5 || argc > 6)
-		return (write(2, "Invalid Argument(s).\n", 21), 1);
-	if (!init_phil(&ph, argv))
-		return (1);
-	if (!create_philos(&ph))
-		return (1);
 	i = 0;
-	while (i < ph.ph_cnt)
-		pthread_join(ph.philo[i++].thread, NULL);
-	return (free_mem (&ph, FREE_PHILO | FREE_FORKS, 0));
+	if (opt & 2)
+	{
+		while (i < ph->ph_cnt)
+			pthread_mutex_destroy (&ph->forks[i++]);
+		free(ph->forks);
+	}
+	if (opt & 1)
+		free (ph->philo);
+	return (exit);
 }

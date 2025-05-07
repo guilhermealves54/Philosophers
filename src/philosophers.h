@@ -13,26 +13,56 @@
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-//	Includes
+# define FREE_PHILO		1
+# define FREE_FORKS		2
+
+//	INCLUDES
 
 # include <unistd.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <limits.h>
+# include <pthread.h>
+# include <sys/time.h>
+
+//	STRUCTS
+
+// Philosophers Struct Array
+typedef struct s_philo
+{
+	int				id;
+	int				meals;
+	long			last_meal;
+	pthread_t		thread;
+    pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	struct s_ph		*ph;
+}	t_philo;
 
 // Main Struct
-typedef struct s_phil
+typedef struct s_ph
 {
-	int	phil;
-	int	forks;
-	int	t_die;
-	int	t_eat;
-	int	t_sleep;
-	int	must_eat;
-}	t_phil;
+	int				ph_cnt;
+	int				frk_cnt;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				must_eat;
+	int				philo_died;
+	pthread_mutex_t	*forks;
+	t_philo			*philo;
+}	t_ph;
 
-//	Funcs
+//	FUNCS
 
 // Initialization
-int	init_phil(t_phil *phil, char **argv);
+int	init_phil(t_ph *ph, char **argv);
+int	create_philos(t_ph *ph);
+
+// Utils
+long	ft_get_time(void);
+
+// Memmory Cleanup
+int	free_mem(t_ph *ph, int opt, int exit);
 
 #endif

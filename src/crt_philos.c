@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/07 01:55:24 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/08 03:16:34 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static int	philo_init(t_ph *ph);
 static void	*ph_routine(void *arg);
+static void	ft_print(t_philo *philo, char *msg);
+static void	*monitor(void *arg);
 
 int	create_philos(t_ph *ph)
 {
@@ -21,10 +23,11 @@ int	create_philos(t_ph *ph)
 
 	ph->philo = malloc (ph->ph_cnt * sizeof(t_philo));
 	if (!ph->philo)
-		return (write (2, "Malloc Error\n", 13), 0);
+		return (write (2, "Malloc Error\n", 13), free_mem(ph, FREE_BASIC, 0));
 	ph->forks = malloc (ph->ph_cnt * sizeof(pthread_mutex_t));
 	if (!ph->philo)
-		return (write (2, "Malloc Error\n", 13), free_mem(ph, FREE_PHILO, 0));
+		return (write (2, "Malloc Error\n", 13), free_mem(ph, FREE_BASIC
+				| FREE_PHILO, 0));
 	i = 0;
 	while (i < ph->ph_cnt)
 		pthread_mutex_init (&ph->forks[i++], NULL);
@@ -47,23 +50,53 @@ static int	philo_init(t_ph *ph)
 		ph->philo[i].right_fork = &ph->forks[(i + 1) % ph->ph_cnt];
 		ph->philo[i].ph = ph;
 		pthread_create(&ph->philo[i].thread, NULL, ph_routine, &ph->philo[i]);
+		i++;
 	}
+	pthread_create(&ph->monitor, NULL, monitor, ph);
 	return (1);
 }
 
-static void *ph_routine(void *arg)
+static void	*ph_routine(void *arg)
 {
-    t_philo *philo = (t_philo *)arg;
+	t_philo	*philo;
 
-    while (!philo->ph->philo_died)
-    {
-        // Think
-        // Take forks
-        // Eat
-        // Release forks
-        // Sleep
-		printf ("Time since last meal: %ld\n", philo->last_meal);
-		philo->ph->philo_died = 1;
-    }
-    return (NULL);
+	philo = (t_philo *)arg;
+	while (!philo->ph->philo_died)
+	{
+	}
+	return (NULL);
+}
+
+static void	ft_print(t_philo *philo, char *msg)
+{
+	long	tstamp;
+
+	tstamp = ft_get_time() - philo->ph->start_t;
+	pthread_mutex_lock(&philo->ph->print);
+	printf("%ld %d %s\n", tstamp, philo->id + 1, msg);
+	pthread_mutex_unlock(&philo->ph->print);
+}
+
+static void	*monitor(void *arg)
+{
+	t_ph	*ph;
+	int		i;
+
+	ph = (t_ph *)arg;
+	while (!ph->philo_died)
+	{
+		i = 0;
+		while (i < ph->ph_cnt)
+		{
+			if ((ft_get_time() - ph->philo[i].last_meal) > ph->t_die)
+			{
+				ph->philo_died = 1;
+				ft_print (ph->philo, "died");
+				break ;
+			}
+			i++;
+		}
+		usleep(1000);
+	}
+	return (NULL);
 }

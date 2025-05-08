@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 16:31:19 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/07 01:46:40 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/08 02:29:57 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ int	main(int argc, char **argv)
 	i = 0;
 	while (i < ph.ph_cnt)
 		pthread_join(ph.philo[i++].thread, NULL);
-	return (free_mem (&ph, FREE_PHILO | FREE_FORKS, 0));
+	pthread_join(ph.monitor, NULL);
+	return (free_mem (&ph, FREE_BASIC | FREE_PHILO | FREE_FORKS, 0));
 }

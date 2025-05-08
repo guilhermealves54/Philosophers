@@ -41,7 +41,6 @@ fclean: clean
 re: fclean all
 
 valgrind: all
-	@valgrind --show-below-main=no --leak-check=full --show-leak-kinds=all \
-	--track-fds=yes --track-origins=yes -s -q ./philosophers
+	@valgrind --leak-check=full --show-leak-kinds=all -s ./philosophers 10 200 200 200
 
 .PHONY: all clean fclean re

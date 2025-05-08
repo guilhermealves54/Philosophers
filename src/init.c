@@ -6,17 +6,19 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:30:20 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/07 01:55:49 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/08 02:09:54 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 static int	valid_args(t_ph *ph);
+static int	ft_strisdigit(const char *str);
 static int	ft_atoi(const char *str);
 
 int	init_phil(t_ph *ph, char **argv)
 {
+	ph->start_t = ft_get_time();
 	ph->ph_cnt = ft_atoi(argv[1]);
 	ph->frk_cnt = ph->ph_cnt;
 	ph->t_die = ft_atoi(argv[2]);
@@ -29,6 +31,7 @@ int	init_phil(t_ph *ph, char **argv)
 		ph->must_eat = -1;
 	if (!valid_args(ph))
 		return (0);
+	pthread_mutex_init(&ph->print, NULL);
 	return (1);
 }
 
@@ -64,7 +67,8 @@ static int	ft_strisdigit(const char *str)
 	{
 		if (str[i] < '0' || str[i] > '9')
 		{
-			return (0);
+			if (str[i] != '-' && str[i] != '+')
+				return (0);
 		}
 		i++;
 	}

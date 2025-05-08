@@ -37,6 +37,8 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
+	int				grabd_l_frk;
+	int				grabd_r_frk;
 	struct s_ph		*ph;
 }	t_philo;
 
@@ -63,8 +65,17 @@ typedef struct s_ph
 int		init_phil(t_ph *ph, char **argv);
 int		create_philos(t_ph *ph);
 
+// Routine
+void	thinking(t_philo *philo);
+void	grab_forks(t_philo *philo);
+void	eating(t_philo *philo);
+void	rel_fork(t_philo *philo);
+void	sleeping(t_philo *philo);
+
 // Utils
 long	ft_get_time(void);
+void	ft_print(t_philo *philo, char *msg);
+void	unlock_rmain_frks(t_ph *ph);
 
 // Memmory Cleanup
 int		free_mem(t_ph *ph, int opt, int exit);

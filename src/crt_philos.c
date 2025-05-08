@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/08 03:16:34 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:23:53 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static int	philo_init(t_ph *ph);
 static void	*ph_routine(void *arg);
-static void	ft_print(t_philo *philo, char *msg);
 static void	*monitor(void *arg);
+static int	check_meals(t_ph *ph, int i);
 
 int	create_philos(t_ph *ph)
 {
@@ -48,6 +48,8 @@ static int	philo_init(t_ph *ph)
 		ph->philo[i].last_meal = ft_get_time();
 		ph->philo[i].left_fork = &ph->forks[i];
 		ph->philo[i].right_fork = &ph->forks[(i + 1) % ph->ph_cnt];
+		ph->philo[i].grabd_l_frk = 0;
+		ph->philo[i].grabd_r_frk = 0;
 		ph->philo[i].ph = ph;
 		pthread_create(&ph->philo[i].thread, NULL, ph_routine, &ph->philo[i]);
 		i++;
@@ -63,18 +65,21 @@ static void	*ph_routine(void *arg)
 	philo = (t_philo *)arg;
 	while (!philo->ph->philo_died)
 	{
+		thinking(philo);
+		if (philo->ph->philo_died)
+			break ;
+		grab_forks(philo);
+		if (philo->ph->philo_died)
+			break ;
+		eating(philo);
+		if (philo->ph->philo_died)
+			break ;
+		rel_fork(philo);
+		if (philo->ph->philo_died)
+			break ;
+		sleeping(philo);
 	}
 	return (NULL);
-}
-
-static void	ft_print(t_philo *philo, char *msg)
-{
-	long	tstamp;
-
-	tstamp = ft_get_time() - philo->ph->start_t;
-	pthread_mutex_lock(&philo->ph->print);
-	printf("%ld %d %s\n", tstamp, philo->id + 1, msg);
-	pthread_mutex_unlock(&philo->ph->print);
 }
 
 static void	*monitor(void *arg)
@@ -94,9 +99,23 @@ static void	*monitor(void *arg)
 				ft_print (ph->philo, "died");
 				break ;
 			}
+			if (check_meals(ph, i))
+				break ;
 			i++;
 		}
 		usleep(1000);
 	}
+	unlock_rmain_frks(ph);
 	return (NULL);
+}
+
+static int	check_meals(t_ph *ph, int i)
+{
+	if (ph->must_eat != -1 && ph->philo[i].meals == ph->must_eat)
+	{
+		ph->philo_died = 1;
+		ft_print (ph->philo, "ate it's last meal");
+		return (1);
+	}
+	return (0);
 }

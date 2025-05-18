@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   crt_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/08 16:23:53 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:41:17 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static int	philo_init(t_ph *ph);
 static void	*ph_routine(void *arg);
 static void	*monitor(void *arg);
-static int	check_meals(t_ph *ph, int i);
+static int	check_meals(t_ph *ph);
 
 int	create_philos(t_ph *ph)
 {
@@ -51,7 +51,8 @@ static int	philo_init(t_ph *ph)
 		ph->philo[i].grabd_l_frk = 0;
 		ph->philo[i].grabd_r_frk = 0;
 		ph->philo[i].ph = ph;
-		pthread_create(&ph->philo[i].thread, NULL, ph_routine, &ph->philo[i]);
+		if (pthread_create(&ph->philo[i].thread, NULL, ph_routine, &ph->philo[i]) != 0)
+		usleep(100);
 		i++;
 	}
 	pthread_create(&ph->monitor, NULL, monitor, ph);
@@ -65,19 +66,14 @@ static void	*ph_routine(void *arg)
 	philo = (t_philo *)arg;
 	while (!philo->ph->philo_died)
 	{
-		thinking(philo);
-		if (philo->ph->philo_died)
-			break ;
-		grab_forks(philo);
-		if (philo->ph->philo_died)
-			break ;
-		eating(philo);
-		if (philo->ph->philo_died)
-			break ;
-		rel_fork(philo);
-		if (philo->ph->philo_died)
-			break ;
+		if (allowed_to_eat(philo))
+		{
+			grab_forks(philo);
+			eating(philo);
+			rel_fork(philo);
+		}
 		sleeping(philo);
+		thinking(philo);
 	}
 	return (NULL);
 }
@@ -99,23 +95,20 @@ static void	*monitor(void *arg)
 				ft_print (ph->philo, "died");
 				break ;
 			}
-			if (check_meals(ph, i))
+			if (check_meals(ph))
 				break ;
 			i++;
 		}
-		usleep(1000);
+		usleep(500);
 	}
 	unlock_rmain_frks(ph);
 	return (NULL);
 }
 
-static int	check_meals(t_ph *ph, int i)
+static int	check_meals(t_ph *ph)
 {
-	if (ph->must_eat != -1 && ph->philo[i].meals == ph->must_eat)
-	{
-		ph->philo_died = 1;
-		ft_print (ph->philo, "ate it's last meal");
-		return (1);
-	}
-	return (0);
+	pthread_mutex_lock(&ph->verif);
+	if (ph->ate_enough >= ph->ph_cnt)
+		return (ph->print_allowed = 0, pthread_mutex_unlock(&ph->verif), 1);
+	return (pthread_mutex_unlock(&ph->verif), 0);
 }

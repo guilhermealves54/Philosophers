@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philosophers
+NAME = philo
 
 # Srcs
 SRCS = main.c init.c crt_philos.c freemem.c utils.c routine.c

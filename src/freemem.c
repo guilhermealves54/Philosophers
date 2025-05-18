@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   freemem.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:46:52 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/08 02:05:27 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:09:23 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ int	free_mem(t_ph *ph, int opt, int exit)
 	if (opt & 2)
 		free (ph->philo);
 	if (opt & 1)
+	{
 		pthread_mutex_destroy(&ph->print);
+		pthread_mutex_destroy(&ph->verif);
+	}
 	return (exit);
 }

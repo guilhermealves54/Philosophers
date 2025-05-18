@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:16:38 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/08 16:15:56 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:45:17 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,20 @@ void	grab_forks(t_philo *philo)
 void	eating(t_philo *philo)
 {
 	philo->last_meal = ft_get_time();
+	pthread_mutex_lock(&philo->ph->verif);
 	ft_print(philo, "is eating");
-	usleep(philo->ph->t_eat * 1000);
 	philo->meals += 1;
+	if (philo->ph->must_eat != -1 && philo->meals == philo->ph->must_eat)
+	{
+		philo->ph->ate_enough += 1;
+		if (philo->ph->ate_enough == philo->ph->ph_cnt)
+		{
+			philo->ph->print_allowed = 0;
+			philo->ph->philo_died = 1;
+		}
+	}
+	pthread_mutex_unlock(&philo->ph->verif);
+	usleep(philo->ph->t_eat * 1000);
 }
 
 void	rel_fork(t_philo *philo)
@@ -57,7 +68,7 @@ void	rel_fork(t_philo *philo)
 	pthread_mutex_unlock(philo->left_fork);
 	philo->grabd_r_frk = 0;
 	pthread_mutex_unlock(philo->right_fork);
-	philo->grabd_l_frk = 1;
+	philo->grabd_l_frk = 0;
 }
 
 void	sleeping(t_philo *philo)

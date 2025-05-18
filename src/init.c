@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:30:20 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/08 02:09:54 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/18 23:42:31 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int	init_phil(t_ph *ph, char **argv)
 	ph->t_eat = ft_atoi(argv[3]);
 	ph->t_sleep = ft_atoi(argv[4]);
 	ph->philo_died = 0;
+	ph->print_allowed = 1;
+	ph->ate_enough = 0;
 	if (argv[5])
 		ph->must_eat = ft_atoi(argv[5]);
 	else
@@ -32,6 +34,7 @@ int	init_phil(t_ph *ph, char **argv)
 	if (!valid_args(ph))
 		return (0);
 	pthread_mutex_init(&ph->print, NULL);
+	pthread_mutex_init(&ph->verif, NULL);
 	return (1);
 }
 

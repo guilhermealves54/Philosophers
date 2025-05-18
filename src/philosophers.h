@@ -52,8 +52,11 @@ typedef struct s_ph
 	int				t_eat;
 	int				t_sleep;
 	int				must_eat;
+	int				ate_enough;
+	int				print_allowed;
 	int				philo_died;
 	pthread_t		monitor;
+	pthread_mutex_t	verif;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
 	t_philo			*philo;
@@ -71,11 +74,13 @@ void	grab_forks(t_philo *philo);
 void	eating(t_philo *philo);
 void	rel_fork(t_philo *philo);
 void	sleeping(t_philo *philo);
+int		allowed_to_eat(t_philo *philo);
 
 // Utils
 long	ft_get_time(void);
 void	ft_print(t_philo *philo, char *msg);
 void	unlock_rmain_frks(t_ph *ph);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
 
 // Memmory Cleanup
 int		free_mem(t_ph *ph, int opt, int exit);

@@ -21,7 +21,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=thread
 
 # Rules
 all: $(NAME)

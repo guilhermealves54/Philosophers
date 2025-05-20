@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   crt_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/20 17:17:24 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/20 19:57:25 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,19 +58,44 @@ static int	philo_init(t_ph *ph)
 	return (1);
 }
 
+void start_routine(t_philo *philo)
+{
+	if (philo->ph->ph_cnt % 2 != 0)
+	{
+		if (philo->id % 2 != 0)
+			return ;
+		else
+		{
+			thinking(philo);
+			if (philo->id == philo->ph->ph_cnt - 1)
+				usleep(philo->ph->t_sleep * 1000);
+			else
+				usleep(2 * philo->ph->t_sleep * 1000);
+		}
+	}
+	else
+	{
+		if (philo->id % 2 != 0)
+			return ;
+		else
+		{
+			thinking(philo);
+			usleep(philo->ph->t_sleep * 1000);
+		}
+	}
+}
+
 static void	*ph_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	start_routine(philo);
 	while (!philo->ph->philo_died)
 	{
-		if (allowed_to_eat(philo))
-		{
-			grab_forks(philo);
-			eating(philo);
-			rel_fork(philo);
-		}
+		grab_forks(philo);
+		eating(philo);
+		rel_fork(philo);
 		sleeping(philo);
 		thinking(philo);
 	}

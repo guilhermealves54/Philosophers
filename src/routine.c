@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:16:38 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/20 17:09:06 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/20 19:27:53 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,26 @@ void	sleeping(t_philo *philo);
 void	thinking(t_philo *philo)
 {
 	ft_print(philo, "is thinking");
+}
+
+int	time_to_eat(t_philo *philo)
+{
+	if (philo->meals == 0)
+		return (1);
+	else
+	{
+		if (philo->id % 2 != 0)
+		{
+			if (ft_get_time() - philo->last_meal < (3 * philo->ph->t_eat))
+				return (0);
+		}
+		else
+		{
+			if (ft_get_time() - philo->last_meal < (2 * philo->ph->t_eat))
+				return (0);
+		}
+	}
+	return (1);
 }
 
 void	grab_forks(t_philo *philo)

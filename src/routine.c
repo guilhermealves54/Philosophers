@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:16:38 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/18 23:45:17 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:09:06 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,23 +24,26 @@ void	thinking(t_philo *philo)
 
 void	grab_forks(t_philo *philo)
 {
-	if (philo->id % 2 == 0)
+	if (time_to_eat(philo))
 	{
-		pthread_mutex_lock(philo->right_fork);
-		philo->grabd_r_frk = 1;
-		ft_print(philo, "has taken a fork");
-		pthread_mutex_lock(philo->left_fork);
-		philo->grabd_l_frk = 1;
-		ft_print(philo, "has taken a fork");
-	}
-	else
-	{
-		pthread_mutex_lock(philo->left_fork);
-		philo->grabd_l_frk = 1;
-		ft_print(philo, "has taken a fork");
-		pthread_mutex_lock(philo->right_fork);
-		philo->grabd_r_frk = 1;
-		ft_print(philo, "has taken a fork");
+		if (philo->id % 2 == 0)
+		{
+			pthread_mutex_lock(philo->right_fork);
+			philo->grabd_r_frk = 1;
+			ft_print(philo, "has taken a fork");
+			pthread_mutex_lock(philo->left_fork);
+			philo->grabd_l_frk = 1;
+			ft_print(philo, "has taken a fork");
+		}
+		else
+		{
+			pthread_mutex_lock(philo->left_fork);
+			philo->grabd_l_frk = 1;
+			ft_print(philo, "has taken a fork");
+			pthread_mutex_lock(philo->right_fork);
+			philo->grabd_r_frk = 1;
+			ft_print(philo, "has taken a fork");
+		}
 	}
 }
 

@@ -21,7 +21,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
 
 # Rules
 all: $(NAME)
@@ -41,6 +41,6 @@ fclean: clean
 re: fclean all
 
 valgrind: all
-	@valgrind --leak-check=full --show-leak-kinds=all -s ./philosophers 10 200 200 200
+	@valgrind --leak-check=full --show-leak-kinds=all -s ./philo 10 200 200 200
 
 .PHONY: all clean fclean re

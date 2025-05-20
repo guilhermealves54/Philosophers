@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   crt_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/18 23:41:17 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/20 17:17:24 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ static int	philo_init(t_ph *ph)
 	int	i;
 
 	i = 0;
+	pthread_create(&ph->monitor, NULL, monitor, ph);
 	while (i < ph->ph_cnt)
 	{
 		ph->philo[i].id = i;
@@ -51,11 +52,9 @@ static int	philo_init(t_ph *ph)
 		ph->philo[i].grabd_l_frk = 0;
 		ph->philo[i].grabd_r_frk = 0;
 		ph->philo[i].ph = ph;
-		if (pthread_create(&ph->philo[i].thread, NULL, ph_routine, &ph->philo[i]) != 0)
-		usleep(100);
+		pthread_create(&ph->philo[i].thread, NULL, ph_routine, &ph->philo[i]);
 		i++;
 	}
-	pthread_create(&ph->monitor, NULL, monitor, ph);
 	return (1);
 }
 
@@ -101,7 +100,6 @@ static void	*monitor(void *arg)
 		}
 		usleep(500);
 	}
-	unlock_rmain_frks(ph);
 	return (NULL);
 }
 

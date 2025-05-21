@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:30:20 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/21 02:41:53 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/22 00:39:07 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	init_phil(t_ph *ph, char **argv)
 static int	valid_args(t_ph *ph)
 {
 	if (ph->ph_cnt == -2 || ph->t_die == -2 || ph->t_eat == -2
-		|| ph->t_sleep == -2)
+		|| ph->t_sleep == -2 || ph->max_eat == -2)
 		return (write(2, "Invalid Argument(s).\n", 21), 0);
 	if (ph->ph_cnt == -3 || ph->t_die == -3 || ph->t_eat == -3
 		|| ph->t_sleep == -3 || ph->max_eat == -3)

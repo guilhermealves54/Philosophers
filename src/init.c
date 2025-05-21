@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 21:30:20 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/18 23:42:31 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/21 02:41:53 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,11 @@ int	init_phil(t_ph *ph, char **argv)
 	ph->philo_died = 0;
 	ph->print_allowed = 1;
 	ph->ate_enough = 0;
+	ph->ready_strt = 0;
 	if (argv[5])
-		ph->must_eat = ft_atoi(argv[5]);
+		ph->max_eat = ft_atoi(argv[5]);
 	else
-		ph->must_eat = -1;
+		ph->max_eat = -1;
 	if (!valid_args(ph))
 		return (0);
 	pthread_mutex_init(&ph->print, NULL);
@@ -44,16 +45,16 @@ static int	valid_args(t_ph *ph)
 		|| ph->t_sleep == -2)
 		return (write(2, "Invalid Argument(s).\n", 21), 0);
 	if (ph->ph_cnt == -3 || ph->t_die == -3 || ph->t_eat == -3
-		|| ph->t_sleep == -3 || ph->must_eat == -3)
+		|| ph->t_sleep == -3 || ph->max_eat == -3)
 		return (write(2, "Arguments must be positive.\n", 28), 0);
 	if (ph->ph_cnt == -4 || ph->t_die == -4 || ph->t_eat == -4
-		|| ph->t_sleep == -4 || ph->must_eat == -4)
+		|| ph->t_sleep == -4 || ph->max_eat == -4)
 		return (write(2, "Arguments must be integers.\n", 28), 0);
 	if (ph->ph_cnt < 1)
 		return (write(2, "Need at least one philosopher.\n", 31), 0);
 	if (ph->t_die == 0 || ph->t_eat == 0 || ph->t_sleep == 0)
 		return (write(2, "0 milliseconds is invalid.\n", 27), 0);
-	if (ph->must_eat == 0)
+	if (ph->max_eat == 0)
 		return (write(2, "If \"number of times each philosopher must eat\" "
 				"is specified, it needs to be more then 0.\n", 89), 0);
 	return (1);

@@ -13,9 +13,9 @@
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# define FREE_BASIC		1
-# define FREE_PHILO		2
-# define FREE_FORKS		4
+# define FREE_BASIC	1
+# define FREE_PHILO	2
+# define DSTROY_FRK	4
 
 //	INCLUDES
 
@@ -34,7 +34,7 @@ typedef struct s_philo
 	int				id;
 	int				meals;
 	long			last_meal;
-	pthread_t		thread;
+	pthread_t		th;
 	pthread_mutex_t	*left_fork;
 	pthread_mutex_t	*right_fork;
 	int				grabd_l_frk;
@@ -51,14 +51,15 @@ typedef struct s_ph
 	int				t_die;
 	int				t_eat;
 	int				t_sleep;
-	int				must_eat;
+	int				max_eat;
 	int				ate_enough;
 	int				print_allowed;
 	int				philo_died;
+	int				ready_strt;
 	pthread_t		monitor;
-	pthread_mutex_t	verif;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print;
+	pthread_mutex_t	verif;
 	t_philo			*philo;
 }	t_ph;
 
@@ -68,13 +69,17 @@ typedef struct s_ph
 int		init_phil(t_ph *ph, char **argv);
 int		create_philos(t_ph *ph);
 
+// Threads
+void	*monitor(void *arg);
+void	*rout(void *arg);
+int		philo_dead(t_ph *ph);
+int		check_meals(t_ph *ph);
+
 // Routine
 void	thinking(t_philo *philo);
-void	grab_forks(t_philo *philo);
 void	eating(t_philo *philo);
-void	rel_fork(t_philo *philo);
 void	sleeping(t_philo *philo);
-int		allowed_to_eat(t_philo *philo);
+int		time_to_eat(t_philo *philo);
 
 // Utils
 long	ft_get_time(void);

@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
+#    By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/04 18:20:53 by gribeiro          #+#    #+#              #
-#    Updated: 2025/04/04 18:20:53 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/05/21 01:32:28 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
 # Srcs
-SRCS = main.c init.c crt_philos.c freemem.c utils.c routine.c
+SRCS = main.c init.c crt_philos.c freemem.c utils.c routine.c threads.c
 
 SRC = $(addprefix src/, $(SRCS))
 

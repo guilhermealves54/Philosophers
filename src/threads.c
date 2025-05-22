@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:52:35 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/21 02:44:28 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:41:50 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ void	*monitor(void *arg)
 	int		i;
 
 	ph = (t_ph *)arg;
+	pthread_mutex_lock(&ph->verif);
 	while (!ph->ready_strt)
 		usleep(100);
+	pthread_mutex_unlock(&ph->verif);
 	while (!philo_dead(ph) && !check_meals(ph))
 	{
 		i = 0;
@@ -51,8 +53,10 @@ void	*rout(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	pthread_mutex_lock(&philo->ph->verif);
 	while (!philo->ph->ready_strt)
 		usleep(100);
+	pthread_mutex_unlock(&philo->ph->verif);
 	start_routine(philo);
 	while (!philo_dead(philo->ph) && !check_meals(philo->ph))
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   crt_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/21 02:41:03 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:33:06 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ int	create_philos(t_ph *ph)
 	i = 0;
 	while (i < ph->ph_cnt)
 		pthread_mutex_init (&ph->forks[i++], NULL);
+	pthread_mutex_lock(&ph->verif);
 	if (!philo_init(ph))
 		return (write (2, "Error creating thread\n", 23),
 			free_mem(ph, FREE_BASIC | FREE_PHILO | DSTROY_FRK, 0));
 	ph->ready_strt = 1;
+	pthread_mutex_unlock(&ph->verif);
 	return (1);
 }
 

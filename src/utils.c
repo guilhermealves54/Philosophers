@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:43:23 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/21 02:14:23 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:55:21 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	ft_print(t_philo *philo, char *msg);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		time_to_eat(t_philo *philo);
+void	unlock_rmain_frks(t_ph *ph);
 
 long	ft_get_time(void)
 {
@@ -73,4 +74,19 @@ int	time_to_eat(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->ph->verif);
 	return (1);
+}
+
+void	unlock_rmain_frks(t_ph *ph)
+{
+	int	i;
+
+	i = 0;
+	while (i < ph->ph_cnt)
+	{
+		if (ph->philo[i].grabd_l_frk)
+			pthread_mutex_unlock(ph->philo[i].left_fork);
+		if (ph->philo[i].grabd_r_frk)
+			pthread_mutex_unlock(ph->philo[i].right_fork);
+		i++;
+	}
 }

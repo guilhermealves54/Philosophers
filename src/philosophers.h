@@ -85,6 +85,7 @@ int		time_to_eat(t_philo *philo);
 long	ft_get_time(void);
 void	ft_print(t_philo *philo, char *msg);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void	unlock_rmain_frks(t_ph *ph);
 
 // Memmory Cleanup
 int		free_mem(t_ph *ph, int opt, int exit);

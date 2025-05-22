@@ -28,6 +28,13 @@
 
 //	STRUCTS
 
+// Forks Struct Array
+typedef struct s_fork
+{
+	int				taken;
+	pthread_mutex_t	mutex;
+}	t_fork;
+
 // Philosophers Struct Array
 typedef struct s_philo
 {
@@ -35,10 +42,8 @@ typedef struct s_philo
 	int				meals;
 	long			last_meal;
 	pthread_t		th;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	*right_fork;
-	int				grabd_l_frk;
-	int				grabd_r_frk;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
 	struct s_ph		*ph;
 }	t_philo;
 
@@ -56,10 +61,10 @@ typedef struct s_ph
 	int				print_allowed;
 	int				philo_died;
 	int				ready_strt;
-	pthread_t		monitor;
-	pthread_mutex_t	*forks;
+	pthread_t		monitor;	
 	pthread_mutex_t	print;
 	pthread_mutex_t	verif;
+	t_fork			*forks;
 	t_philo			*philo;
 }	t_ph;
 
@@ -85,7 +90,6 @@ int		time_to_eat(t_philo *philo);
 long	ft_get_time(void);
 void	ft_print(t_philo *philo, char *msg);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
-void	unlock_rmain_frks(t_ph *ph);
 
 // Memmory Cleanup
 int		free_mem(t_ph *ph, int opt, int exit);

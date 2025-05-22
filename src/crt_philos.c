@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   crt_philos.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/22 15:33:06 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/23 00:34:56 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,17 @@ int	create_philos(t_ph *ph)
 	ph->philo = malloc (ph->ph_cnt * sizeof(t_philo));
 	if (!ph->philo)
 		return (write (2, "Malloc Error\n", 13), free_mem(ph, FREE_BASIC, 0));
-	ph->forks = malloc (ph->ph_cnt * sizeof(pthread_mutex_t));
+	ph->forks = malloc (ph->ph_cnt * sizeof(t_fork));
 	if (!ph->forks)
 		return (write (2, "Malloc Error\n", 13), free_mem(ph, FREE_BASIC
 				| FREE_PHILO, 0));
 	i = 0;
 	while (i < ph->ph_cnt)
-		pthread_mutex_init (&ph->forks[i++], NULL);
+	{
+		ph->forks[i].taken = 0;
+		pthread_mutex_init (&ph->forks[i].mutex, NULL);
+		i++;
+	}
 	pthread_mutex_lock(&ph->verif);
 	if (!philo_init(ph))
 		return (write (2, "Error creating thread\n", 23),
@@ -51,8 +55,6 @@ static int	philo_init(t_ph *ph)
 		ph->philo[i].last_meal = ft_get_time();
 		ph->philo[i].left_fork = &ph->forks[i];
 		ph->philo[i].right_fork = &ph->forks[(i + 1) % ph->ph_cnt];
-		ph->philo[i].grabd_l_frk = 0;
-		ph->philo[i].grabd_r_frk = 0;
 		ph->philo[i].ph = ph;
 		if (pthread_create(&ph->philo[i].th, NULL, rout, &ph->philo[i]) != 0)
 		{

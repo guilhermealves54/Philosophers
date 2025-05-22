@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:16:38 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/22 17:47:36 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/23 00:22:18 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,36 +51,64 @@ void	eating(t_philo *philo)
 	}
 }
 
+static int	checkfork(t_fork *fork)
+{
+	int	success;
+
+	success = 0;
+	pthread_mutex_lock(&fork->mutex);
+	if (fork->taken == 0)
+	{
+		fork->taken = 1;
+		success = 1;
+	}
+	pthread_mutex_unlock(&fork->mutex);
+	return (success);
+}
+
+static void releasefork(t_fork *fork)
+{
+	pthread_mutex_lock(&fork->mutex);
+	fork->taken = 0;
+	pthread_mutex_unlock(&fork->mutex);
+}
+
+static void fork_loop(t_philo *philo, t_fork *first, t_fork *secnd, int grdfrks)
+{
+	int	printed;
+
+	printed = 0;
+	while (!grdfrks && !philo_dead(philo->ph)
+			&& !check_meals(philo->ph))
+	{
+		if (checkfork(first))
+		{
+			if (printed == 0)
+				ft_print(philo, "has taken a fork");
+			printed = 1;
+			if (checkfork(secnd))
+			{
+				ft_print(philo, "has taken a fork");
+				grdfrks = 1;
+			}
+			else
+				releasefork (first);
+		}	
+	}
+}
+
 static void	grab_forks(t_philo *philo)
 {
 	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(philo->right_fork);
-		philo->grabd_r_frk = 1;
-		ft_print(philo, "has taken a fork");
-		pthread_mutex_lock(philo->left_fork);
-		philo->grabd_l_frk = 1;
-		ft_print(philo, "has taken a fork");
-	}
+		fork_loop (philo, philo->right_fork, philo->left_fork, 0);
 	else
-	{
-		pthread_mutex_lock(philo->left_fork);
-		philo->grabd_l_frk = 1;
-		ft_print(philo, "has taken a fork");
-		pthread_mutex_lock(philo->right_fork);
-		philo->grabd_r_frk = 1;
-		ft_print(philo, "has taken a fork");
-	}
+		fork_loop (philo, philo->left_fork, philo->right_fork, 0);
 }
 
 static void	rel_fork(t_philo *philo)
 {
-	if (philo->grabd_l_frk)
-		pthread_mutex_unlock(philo->left_fork);
-	philo->grabd_l_frk = 0;
-	if (philo->grabd_r_frk)
-		pthread_mutex_unlock(philo->right_fork);
-	philo->grabd_r_frk = 0;
+	releasefork (philo->right_fork);
+	releasefork (philo->left_fork);
 }
 
 void	sleeping(t_philo *philo)

@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/04 18:20:53 by gribeiro          #+#    #+#              #
-#    Updated: 2025/05/23 19:53:07 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/05/23 23:19:20 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,6 @@ fclean: clean
 re: fclean all
 
 valgrind: all
-	@valgrind --tool=helgrind ./philo 3 510 100 100
+	@valgrind --tool=helgrind ./philo 200 800 200 200 10
 
 .PHONY: all clean fclean re

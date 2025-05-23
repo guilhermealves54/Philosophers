@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/08 15:16:38 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 19:50:46 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/23 21:32:05 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ static void fork_loop(t_philo *philo, t_fork *frst, t_fork *secnd, int grdfrks)
 			}
 			else
 				releasefork (frst);
-		}	
+		}
+		usleep(250);
 	}
 }
 

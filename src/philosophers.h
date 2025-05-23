@@ -38,10 +38,12 @@ typedef struct s_fork
 // Philosophers Struct Array
 typedef struct s_philo
 {
+	pthread_t		th;
 	int				id;
 	int				meals;
+	pthread_mutex_t	meals_m;
 	long			last_meal;
-	pthread_t		th;
+	pthread_mutex_t	last_meal_m;
 	t_fork			*left_fork;
 	t_fork			*right_fork;
 	struct s_ph		*ph;
@@ -50,20 +52,17 @@ typedef struct s_philo
 // Main Struct
 typedef struct s_ph
 {
+	pthread_t		monitor;
 	long			start_t;
 	int				ph_cnt;
 	int				frk_cnt;
 	int				t_die;
 	int				t_eat;
 	int				t_sleep;
-	int				max_eat;
-	int				ate_enough;
-	int				print_allowed;
-	int				philo_died;
-	int				ready_strt;
-	pthread_t		monitor;	
+	int				max_meals;
 	pthread_mutex_t	print;
-	pthread_mutex_t	verif;
+	int				philo_died;
+	pthread_mutex_t	philo_died_m;	
 	t_fork			*forks;
 	t_philo			*philo;
 }	t_ph;
@@ -77,7 +76,6 @@ int		create_philos(t_ph *ph);
 // Threads
 void	*monitor(void *arg);
 void	*rout(void *arg);
-int		philo_dead(t_ph *ph);
 int		check_meals(t_ph *ph);
 
 // Routine
@@ -85,6 +83,13 @@ void	thinking(t_philo *philo);
 void	eating(t_philo *philo);
 void	sleeping(t_philo *philo);
 int		time_to_eat(t_philo *philo);
+
+// Mutex Handlers
+int		death(t_ph *ph, int status);
+long	last_meal(t_philo *philo, long timecode);
+int		meals(t_philo *philo, int status);
+int		checkfork(t_fork *fork);
+void	releasefork(t_fork *fork);
 
 // Utils
 long	ft_get_time(void);

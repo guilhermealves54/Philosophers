@@ -3,17 +3,18 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+         #
+#    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/04 18:20:53 by gribeiro          #+#    #+#              #
-#    Updated: 2025/05/23 00:46:18 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/05/23 19:53:07 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
 # Srcs
-SRCS = main.c init.c crt_philos.c freemem.c utils.c routine.c threads.c
+SRCS = main.c init.c crt_philos.c utils.c routine.c threads.c \
+	mutex_handler.c freemem.c
 
 SRC = $(addprefix src/, $(SRCS))
 
@@ -21,7 +22,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=thread -pthread
 
 # Rules
 all: $(NAME)
@@ -41,6 +42,6 @@ fclean: clean
 re: fclean all
 
 valgrind: all
-	@valgrind --leak-check=full --show-leak-kinds=all -s ./philo 10 200 200 200
+	@valgrind --tool=helgrind ./philo 3 510 100 100
 
 .PHONY: all clean fclean re

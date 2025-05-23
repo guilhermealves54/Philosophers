@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:43:23 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 00:24:31 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:33:44 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	ft_print(t_philo *philo, char *msg);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		time_to_eat(t_philo *philo);
-void	unlock_rmain_frks(t_ph *ph);
 
 long	ft_get_time(void)
 {
@@ -30,14 +29,13 @@ void	ft_print(t_philo *philo, char *msg)
 	long	tstamp;
 
 	tstamp = ft_get_time() - philo->ph->start_t;
-	pthread_mutex_lock(&philo->ph->print);
-	if (philo->ph->print_allowed)
+	if ((ft_strncmp(msg, "died", 4) == 0 || !death(philo->ph, -1)) 
+		&& !check_meals(philo->ph))
 	{
+		pthread_mutex_lock(&philo->ph->print);
 		printf("%ld %d %s\n", tstamp, philo->id + 1, msg);
-		if (ft_strncmp(msg, "died", 4) == 0)
-			philo->ph->print_allowed = 0;
+		pthread_mutex_unlock(&philo->ph->print);
 	}
-	pthread_mutex_unlock(&philo->ph->print);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -56,22 +54,21 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 
 int	time_to_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->ph->verif);
-	if (philo->meals == 0)
-		return (pthread_mutex_unlock(&philo->ph->verif), 1);
+	if (meals(philo, -1) == 0)
+		return (1);
 	else
 	{
 		if (philo->ph->ph_cnt % 2 != 0)
 		{
-			if (ft_get_time() - philo->last_meal < (3 * philo->ph->t_eat))
-				return (pthread_mutex_unlock(&philo->ph->verif), 0);
+			if (ft_get_time() - last_meal(philo, -1) < (3 * philo->ph->t_eat))
+				return (0);
 		}
 		else
 		{
-			if (ft_get_time() - philo->last_meal < (2 * philo->ph->t_eat))
-				return (pthread_mutex_unlock(&philo->ph->verif), 0);
+			if (ft_get_time() - last_meal(philo, -1) < (2 * philo->ph->t_eat))
+				return (0);
 		}
 	}
-	pthread_mutex_unlock(&philo->ph->verif);
 	return (1);
 }
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:52:35 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 00:55:00 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:09:26 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void		*rout(void *arg);
 static void	start_routine(t_philo *philo);
-int			philo_dead(t_ph *ph);
 int			check_meals(t_ph *ph);
 
 void	*monitor(void *arg)
@@ -23,27 +22,20 @@ void	*monitor(void *arg)
 	int		i;
 
 	ph = (t_ph *)arg;
-	pthread_mutex_lock(&ph->verif);
-	while (!ph->ready_strt)
-		usleep(100);
-	pthread_mutex_unlock(&ph->verif);
-	while (!philo_dead(ph) && !check_meals(ph))
+	while (!death(ph, -1) && !check_meals(ph))
 	{
 		i = 0;
 		while (i < ph->ph_cnt)
 		{
-			pthread_mutex_lock(&ph->verif);
-			if ((ft_get_time() - ph->philo[i].last_meal) > ph->t_die)
+			if ((ft_get_time() - last_meal(&ph->philo[i], -1)) > ph->t_die)
 			{
-				ph->philo_died = 1;
-				pthread_mutex_unlock(&ph->verif);
+				death(ph, 1);
 				ft_print (&ph->philo[i], "died");
 				break ;
 			}
-			pthread_mutex_unlock(&ph->verif);
 			i++;
 		}
-		usleep(1000);
+		usleep(500);
 	}
 	return (NULL);
 }
@@ -53,17 +45,13 @@ void	*rout(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	pthread_mutex_lock(&philo->ph->verif);
-	while (!philo->ph->ready_strt)
-		usleep(100);
-	pthread_mutex_unlock(&philo->ph->verif);
 	start_routine(philo);
-	while (!philo_dead(philo->ph) && !check_meals(philo->ph))
+	while (!death(philo->ph, -1) && !check_meals(philo->ph))
 	{
 		eating(philo); 
-		if (!philo_dead(philo->ph) && !check_meals(philo->ph))
+		if (!death(philo->ph, -1) && !check_meals(philo->ph))
 			sleeping(philo);
-		if (!philo_dead(philo->ph) && !check_meals(philo->ph))
+		if (!death(philo->ph, -1) && !check_meals(philo->ph))
 			thinking(philo);
 	}
 	return (NULL);
@@ -98,27 +86,20 @@ static void start_routine(t_philo *philo)
 	}
 }
 
-int	philo_dead(t_ph *ph)
-{
-	pthread_mutex_lock(&ph->verif);
-	if (ph->philo_died)
-	{
-		pthread_mutex_unlock(&ph->verif);
-		return (1);
-	}
-	pthread_mutex_unlock(&ph->verif);
-	return (0);
-}
-
 int	check_meals(t_ph *ph)
 {
-	pthread_mutex_lock(&ph->verif);
-	if (ph->ate_enough >= ph->ph_cnt)
+	int	i;
+
+	i = 0;
+	if (ph->max_meals != -1)
 	{
-		ph->print_allowed = 0;
-		pthread_mutex_unlock(&ph->verif);
+		while (i < ph->ph_cnt)
+		{
+			if (meals(&ph->philo[i], -1) < ph->max_meals)
+				return (0);
+			i++;
+		}
 		return (1);
 	}
-	pthread_mutex_unlock(&ph->verif);
 	return (0);
 }

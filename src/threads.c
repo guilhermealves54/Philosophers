@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:52:35 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/22 15:41:50 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/23 00:55:00 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	*rout(void *arg)
 
 static void start_routine(t_philo *philo)
 {
+	if (philo->ph->ph_cnt == 1)
+		return ;
 	if (philo->ph->ph_cnt % 2 != 0)
 	{
 		if (philo->id % 2 != 0)

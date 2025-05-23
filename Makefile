@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
+#    By: gribeiro <gribeiro@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/04 18:20:53 by gribeiro          #+#    #+#              #
-#    Updated: 2025/05/22 15:29:07 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/05/23 00:46:18 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ OBJS = $(SRC:.c=.o)
 
 # Compiler
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=thread
 
 # Rules
 all: $(NAME)

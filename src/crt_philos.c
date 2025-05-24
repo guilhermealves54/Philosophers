@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:44:15 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 19:10:05 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/24 02:34:09 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,10 @@ static int	philo_init(t_ph *ph)
 		ph->philo[i].left_fork = &ph->forks[i];
 		ph->philo[i].right_fork = &ph->forks[(i + 1) % ph->ph_cnt];
 		ph->philo[i].ph = ph;
-
 		i++;
 	}
 	if (!philo_init_threads(ph))
-		return(0);
+		return (0);
 	return (1);
 }
 

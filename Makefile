@@ -6,7 +6,7 @@
 #    By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/04 18:20:53 by gribeiro          #+#    #+#              #
-#    Updated: 2025/05/23 23:19:20 by gribeiro         ###   ########.fr        #
+#    Updated: 2025/05/24 02:38:59 by gribeiro         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = philo
 
 # Srcs
 SRCS = main.c init.c crt_philos.c utils.c routine.c threads.c \
-	mutex_handler.c freemem.c
+	mutex_handler.c freemem.c routine_eat.c
 
 SRC = $(addprefix src/, $(SRCS))
 

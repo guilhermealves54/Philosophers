@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 23:52:35 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 19:09:26 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/24 02:34:31 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	*rout(void *arg)
 	start_routine(philo);
 	while (!death(philo->ph, -1) && !check_meals(philo->ph))
 	{
-		eating(philo); 
+		eating(philo);
 		if (!death(philo->ph, -1) && !check_meals(philo->ph))
 			sleeping(philo);
 		if (!death(philo->ph, -1) && !check_meals(philo->ph))
@@ -57,7 +57,7 @@ void	*rout(void *arg)
 	return (NULL);
 }
 
-static void start_routine(t_philo *philo)
+static void	start_routine(t_philo *philo)
 {
 	if (philo->ph->ph_cnt == 1)
 		return ;

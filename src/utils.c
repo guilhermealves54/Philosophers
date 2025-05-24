@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 01:43:23 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 19:33:44 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/24 02:32:19 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,11 @@ void	ft_print(t_philo *philo, char *msg)
 	long	tstamp;
 
 	tstamp = ft_get_time() - philo->ph->start_t;
-	if ((ft_strncmp(msg, "died", 4) == 0 || !death(philo->ph, -1)) 
+	pthread_mutex_lock(&philo->ph->print);
+	if ((ft_strncmp(msg, "died", 4) == 0 || !death(philo->ph, -1))
 		&& !check_meals(philo->ph))
-	{
-		pthread_mutex_lock(&philo->ph->print);
 		printf("%ld %d %s\n", tstamp, philo->id + 1, msg);
-		pthread_mutex_unlock(&philo->ph->print);
-	}
+	pthread_mutex_unlock(&philo->ph->print);
 }
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -71,4 +69,3 @@ int	time_to_eat(t_philo *philo)
 	}
 	return (1);
 }
-

@@ -6,7 +6,7 @@
 /*   By: gribeiro <gribeiro@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 16:04:28 by gribeiro          #+#    #+#             */
-/*   Updated: 2025/05/23 19:11:30 by gribeiro         ###   ########.fr       */
+/*   Updated: 2025/05/24 02:32:02 by gribeiro         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	death(t_ph *ph, int status)
 long	last_meal(t_philo *philo, long timecode)
 {
 	long	value;
-	
+
 	pthread_mutex_lock(&philo->last_meal_m);
 	if (timecode != -1)
 	{
